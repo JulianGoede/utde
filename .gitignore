@@ -1,0 +1,16 @@
+# python generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.pytest_cache/
+.ruff_cache/
+.coverage
+
+# venv
+.venv
+
+# i like to edit my commit messages in this file
+commit_msg.txt
