@@ -1,7 +1,7 @@
 [project]
 name = "utde"
 version = "0.1.0"
-description = "Add your description here"
+description = "A collection of python decorators I wish existed before"
 authors = [
     { name = "Julian Goede", email = "julian.goede@smartclip.tv" }
 ]
