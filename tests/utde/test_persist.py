@@ -1,5 +1,6 @@
 import pytest
 import tempfile
+import pydoc
 from utde.persist import generic_persist, persist_pd
 from unittest.mock import Mock
 from inspect import signature
@@ -201,6 +202,22 @@ def test_simple_caching_use_case():
     new_result = wrapped_fn(x + 2, day)
     assert new_result == 46, "wrapped function wasn't recomputed"
     assert cache[key] == new_result, "somehow result was computed and not cached .."
+
+
+def test_persist_preserves_wrapped_fn_information():
+    expected_doc = "The answer to all questions is 42"
+
+    @generic_persist(KEY_FN_NO_ARG, LOAD_FN_NO_ARG, STORE_FN_NO_ARG)
+    def wrapped_fn():
+        """
+        The answer to all questions is 42
+        """
+        pass
+
+    doc_string = pydoc.render_doc(wrapped_fn)
+    doc_string = str(doc_string).strip()
+
+    assert doc_string.endswith(expected_doc), "The doc of wrapped_fn was overwritten"
 
 
 def test_persist_pd():

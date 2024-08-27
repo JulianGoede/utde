@@ -1,6 +1,6 @@
 import inspect
 from typing import Callable, Union, Any, Optional
-
+from functools import wraps
 
 def generic_persist(
     key_or_fn: Union[str, Callable[Any, str]] = None,
@@ -32,6 +32,7 @@ def generic_persist(
             store_fn is not None
         ), f"Must provide a store_fn (function(Any, str)) to persist data (of type Any) at {key_or_fn} but got None"
 
+        @wraps(fn_to_persist)
         def apply_with_persist(*args, **kwargs):
             key_name = None
             if isinstance(key_or_fn, str):
