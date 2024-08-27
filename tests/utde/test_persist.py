@@ -1,7 +1,9 @@
 import pytest
-from utde.persist import generic_persist
+import tempfile
+from utde.persist import generic_persist, persist_pd
 from unittest.mock import Mock
 from inspect import signature
+from pathlib import Path
 
 
 def LOAD_FN_NO_ARG(key):
@@ -40,7 +42,6 @@ def WRAPPED_FN_X_ARG_Y_DEFAULT(x, y=42):
     return x + y
 
 
-# TODO: provide multiple key_fns and check if the args/kwargs are passed correctly
 @pytest.mark.parametrize(
     "_test_description, key_fn, wrapped_fn, args, expected_calling_signature",
     [
@@ -157,10 +158,10 @@ def test_wrapped_fn_result_is_stored_at_specified_key():
     assert x == cache[key], f"store_fn didn't store value {x} at {key} but {cache[key]}"
 
 
-# # SECTION: TEST BY EXAMPLES
-# # HERE I WANT TO PROVIDE SOME EXAMPLES
-# # BOTH TO SHOW HOW TO USE THIS FUNCTION
-# # AS WELL AS TO HAVE "REALISTIC" test cases
+# SECTION: TEST BY EXAMPLES
+# HERE I WANT TO PROVIDE SOME EXAMPLES
+# BOTH TO SHOW HOW TO USE THIS FUNCTION
+# AS WELL AS TO HAVE "REALISTIC" test cases
 
 
 def test_simple_caching_use_case():
@@ -200,3 +201,33 @@ def test_simple_caching_use_case():
     new_result = wrapped_fn(x + 2, day)
     assert new_result == 46, "wrapped function wasn't recomputed"
     assert cache[key] == new_result, "somehow result was computed and not cached .."
+
+
+def test_persist_pd():
+    import pandas as pd
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        year = "2024"
+        wrapped_counter = Mock()
+
+        def key_fn(year: str):
+            return f"{tmpdir.rstrip('/')}/report_{year}.pkl"
+
+        @persist_pd(key_fn)
+        def yearly_report(year: str, wrapped_counter=wrapped_counter) -> pd.DataFrame:
+            wrapped_counter(year)
+            return pd.DataFrame(data={"year": [year], "profit": [42]})
+
+        expected_filename = f"{tmpdir.rstrip('/')}/report_{year}.pkl"
+        assert not Path(
+            expected_filename
+        ).is_file(), f"Pickle file {expected_filename} must not exist before"
+
+        _ = yearly_report(year)
+
+        assert Path(
+            expected_filename
+        ).is_file(), f"Pickle file {expected_filename} must exist after"
+
+        _ = yearly_report(year)
+        wrapped_counter.assert_called_once_with(year)

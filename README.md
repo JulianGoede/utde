@@ -18,6 +18,8 @@ This decorator allows you to specify:
     the results of the "expensive" function call so that
     it can be loaded next time instead
 
+Example:
+
 ```python
 from utde.persist import generic_persist
 
@@ -40,3 +42,22 @@ def wrapped_fn(x, day_str):
     return x * 2
 ```
 
+### Pandas (optional)
+
+`pip install utde[pandas]`
+
+There is a overloaded version for pandas that will load/store
+using the pickle format. Then you only have to provide where
+to load/store the file from/to.
+
+WARNING: Only provide a key to a location you trust in, as
+unpickling a pickle file may execute arbitrary code.
+
+```python
+import pandas as pd
+from utde.persist import persist_pd
+
+@persist_pd(lambda year: f"yearly_report_{year}.pkl")
+def yearly_report(year: str) -> pd.DataFrame:
+    return pd.DataFrame(data={"year": [year], "profit": [42]})
+```

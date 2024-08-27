@@ -1,5 +1,5 @@
-from typing import Callable, Union, Any
 import inspect
+from typing import Callable, Union, Any, Optional
 
 
 def generic_persist(
@@ -59,3 +59,39 @@ def generic_persist(
         return apply_with_persist
 
     return apply
+
+
+try:
+    import pandas as pd
+
+    def persist_pd(key_or_fn: Union[str, Callable[Any, str]] = None):
+        """
+        Persist a pandas dataframe returned from the wrapped function.
+        The dataframe is stored and loaded using pandas pickle format.
+
+        WARNING: Only provide keys to locations you trust as unpickling
+        a pickle file may execute arbitrary code.
+
+        Keyword arguments:
+        key_or_fn -- either a string or a function
+                     accepting the arguments of the `original` function and returns
+                     a possibly parametrized string.
+        """
+
+        def read_pd_pickle_optional(s) -> Optional[pd.DataFrame]:
+            try:
+                return pd.read_pickle(s)
+            except Exception:
+                return None
+
+        def store_pd_pickle(df, s):
+            df.to_pickle(s)
+
+        return generic_persist(
+            key_or_fn=key_or_fn,
+            load_fn=read_pd_pickle_optional,
+            store_fn=store_pd_pickle,
+        )
+
+except ImportError:
+    pass
