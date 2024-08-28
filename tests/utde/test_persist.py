@@ -1,7 +1,7 @@
 import pytest
 import tempfile
 import pydoc
-from utde.persist import generic_persist, persist_pd
+from utde.persist import generic_persist, FEATURE_PANDAS
 from unittest.mock import Mock
 from inspect import signature
 from pathlib import Path
@@ -220,8 +220,10 @@ def test_persist_preserves_wrapped_fn_information():
     assert doc_string.endswith(expected_doc), "The doc of wrapped_fn was overwritten"
 
 
+@pytest.mark.skipif(not FEATURE_PANDAS, reason="feature requires pandas")
 def test_persist_pd():
     import pandas as pd
+    from utde.persist import persist_pd
 
     with tempfile.TemporaryDirectory() as tmpdir:
         year = "2024"

@@ -1,6 +1,10 @@
+import importlib
 import inspect
 from typing import Callable, Union, Any, Optional
 from functools import wraps
+
+FEATURE_PANDAS: bool = importlib.util.find_spec("pandas") is not None
+
 
 def generic_persist(
     key_or_fn: Union[str, Callable[Any, str]] = None,
@@ -62,7 +66,7 @@ def generic_persist(
     return apply
 
 
-try:
+if FEATURE_PANDAS:
     import pandas as pd
 
     def persist_pd(key_or_fn: Union[str, Callable[Any, str]] = None):
@@ -93,6 +97,3 @@ try:
             load_fn=read_pd_pickle_optional,
             store_fn=store_pd_pickle,
         )
-
-except ImportError:
-    pass
