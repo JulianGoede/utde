@@ -61,3 +61,25 @@ from utde.persist import persist_pd
 def yearly_report(year: str) -> pd.DataFrame:
     return pd.DataFrame(data={"year": [year], "profit": [42]})
 ```
+
+## Timer
+
+Although its a simple function to write I often reinvented the
+wheel and wrote a function/decorator to track the execution time
+of a function of interest. 
+
+```python
+from utde.profiling import timer
+import time
+
+@timer
+def slow_fn():
+    time.sleep(2)
+
+slow_fn()
+```
+
+Output:
+```bash
+INFO: `slow_fn` ellapsed time: 2.000s
+```
