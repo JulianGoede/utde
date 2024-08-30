@@ -1,7 +1,8 @@
 import pytest
 import tempfile
 import pydoc
-from utde.persist import generic_persist, FEATURE_PANDAS
+from utde import generic_persist
+from utde.persist import FEATURE_PANDAS
 from unittest.mock import Mock
 from inspect import signature
 from pathlib import Path

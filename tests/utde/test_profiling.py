@@ -1,7 +1,7 @@
 import logging
 import pytest
 import pydoc
-from utde.profiling import timer
+from utde import timer
 from unittest.mock import patch, MagicMock
 
 

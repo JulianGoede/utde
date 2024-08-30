@@ -21,7 +21,7 @@ This decorator allows you to specify:
 Example:
 
 ```python
-from utde.persist import generic_persist
+from utde import generic_persist
 
 cache = dict()
 
@@ -55,7 +55,7 @@ unpickling a pickle file may execute arbitrary code.
 
 ```python
 import pandas as pd
-from utde.persist import persist_pd
+from utde import persist_pd
 
 @persist_pd(lambda year: f"yearly_report_{year}.pkl")
 def yearly_report(year: str) -> pd.DataFrame:
@@ -69,7 +69,7 @@ wheel and wrote a function/decorator to track the execution time
 of a function of interest. 
 
 ```python
-from utde.profiling import timer
+from utde import timer
 import time
 
 @timer
