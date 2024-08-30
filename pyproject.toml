@@ -26,6 +26,12 @@ dev-dependencies = [
     "pandas>=2.2.2",
 ]
 
+[tool.rye.scripts]
+check = { chain = ["check-format", "check-lint", "check-test"]}
+"check-format" = "rye format --check"
+"check-lint" = "rye lint"
+"check-test" = {cmd = ["pytest", "--cov=utde", "--cov-report", "term-missing", "--no-cov-on-fail", "--cov-fail-under=100"]}
+
 [tool.hatch.metadata]
 allow-direct-references = true
 
