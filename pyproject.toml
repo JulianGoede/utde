@@ -1,11 +1,13 @@
 [project]
 name = "utde"
-version = "0.1.4"
+version = "0.1.5"
 description = "A collection of python decorators I wish existed before"
 authors = [
     { name = "Julian Goede", email = "julian.goede@smartclip.tv" }
 ]
-dependencies = []
+dependencies = [
+    "beartype>=0.18.5",
+]
 readme = "README.md"
 requires-python = ">= 3.8"
 

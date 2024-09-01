@@ -10,3 +10,5 @@
 #   universal: false
 
 -e file:.
+beartype==0.18.5
+    # via utde

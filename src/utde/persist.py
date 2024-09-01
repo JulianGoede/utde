@@ -1,4 +1,4 @@
-import importlib
+import importlib.util
 import inspect
 from typing import Callable, Union, Any, Optional
 from functools import wraps

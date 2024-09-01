@@ -83,3 +83,35 @@ Output:
 ```bash
 INFO: `slow_fn` ellapsed time: 2.000s
 ```
+
+## Checks
+
+Some decorators which can come in handy when working with
+jupyter notebooks
+
+### Dynamic type checking
+
+Given a function with type annotations the decorator
+`@check` will assert that the function is not called with
+types incompatible with the function annotation.
+Note that there is some performance overhead since the code
+will be dynamicially passed to [beartype](https://beartype.readthedocs.io/en/latest/) which handles dynamic type checking.
+
+```python
+from utde import check
+
+@check
+def integer_sum(x: int, y:int):
+    return x + y
+
+integer_sum(10, 10)  # works
+integer_sum(1.25, 2.5)  # raises an utde.errors.TypeCheckError
+```
+
+
+**Note 1:** I'm planning to also run a linter that will check the function and hence I didn't
+call this decorator `@check_types` or similar.
+
+**Note 2:** I didn't use pydantic as it didn't complain when I tried to call
+a function `foo(x: int)` with `foo(1.0)`. This might be a design decision
+however I personally prefer stricter type checking here.
