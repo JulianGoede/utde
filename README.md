@@ -97,6 +97,7 @@ types incompatible with the function annotation.
 Note that there is some performance overhead since the code
 will be dynamicially passed to [beartype](https://beartype.readthedocs.io/en/latest/) which handles dynamic type checking.
 
+
 ```python
 from utde import check
 
@@ -108,10 +109,42 @@ integer_sum(10, 10)  # works
 integer_sum(1.25, 2.5)  # raises an utde.errors.TypeCheckError
 ```
 
-
-**Note 1:** I'm planning to also run a linter that will check the function and hence I didn't
-call this decorator `@check_types` or similar.
-
-**Note 2:** I didn't use pydantic as it didn't complain when I tried to call
+**Note:** I didn't use pydantic as it didn't complain when I tried to call
 a function `foo(x: int)` with `foo(1.0)`. This might be a design decision
 however I personally prefer stricter type checking here.
+
+### Linting
+
+If not disabled via `@check(enable_lint_checks=False)`, @check
+will check the fn code for linting errors and raise a `utde.errors.LintCheckError`
+if [ruff](https://docs.astral.sh/ruff/linter/) detects an error that overlaps
+with the function definition call.
+
+
+This function will fail with an error:
+```python
+from utde import check
+
+@check
+def fn_with_unused_variable():
+    unused_var = 42
+```
+
+however the following code will pass since
+the function `fn_with_unused_variable` is not decorated
+with `@check`:
+
+```python
+from utde import check
+
+def fn_with_unused_variable():
+    unused_var = 42
+
+@check
+def super_clean_function():
+    used_var = 10
+    return used_var + 32
+```
+
+**Note:** Linting is currently only supported where the function
+resides in some source file with suffix `.py` and `.ipynb`.

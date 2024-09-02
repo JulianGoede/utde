@@ -4,3 +4,7 @@ class CheckError(Exception):
 
 class TypeCheckError(CheckError):
     pass
+
+
+class LintCheckError(CheckError):
+    pass

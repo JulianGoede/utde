@@ -12,3 +12,5 @@
 -e file:.
 beartype==0.18.5
     # via utde
+ruff==0.6.3
+    # via utde
