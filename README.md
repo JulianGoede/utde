@@ -113,7 +113,11 @@ integer_sum(1.25, 2.5)  # raises an utde.errors.TypeCheckError
 a function `foo(x: int)` with `foo(1.0)`. This might be a design decision
 however I personally prefer stricter type checking here.
 
-### Linting
+### Experemental: Linting
+
+**Note:** Linting is currently only supported where the function
+resides in a classical python file e.g. `foo.py`. I'm working
+on making this feature available at least in jupyter notebooks
 
 If not disabled via `@check(enable_lint_checks=False)`, @check
 will check the fn code for linting errors and raise a `utde.errors.LintCheckError`
@@ -123,28 +127,25 @@ with the function definition call.
 
 This function will fail with an error:
 ```python
-from utde import check
+from utde import lint
 
-@check
+@lint
 def fn_with_unused_variable():
     unused_var = 42
 ```
 
 however the following code will pass since
 the function `fn_with_unused_variable` is not decorated
-with `@check`:
+with `@lint`:
 
 ```python
-from utde import check
+from utde import lint
 
 def fn_with_unused_variable():
     unused_var = 42
 
-@check
+@lint
 def super_clean_function():
     used_var = 10
     return used_var + 32
 ```
-
-**Note:** Linting is currently only supported where the function
-resides in some source file with suffix `.py` and `.ipynb`.

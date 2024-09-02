@@ -1,6 +1,6 @@
-from utde import check
+from utde import lint
 
 
-@check
+@lint
 def foo():
     unused_var = 42

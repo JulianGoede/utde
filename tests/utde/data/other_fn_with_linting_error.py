@@ -1,7 +1,7 @@
-from utde import check
+from utde import lint
 
 
-@check
+@lint
 def good_function():
     """
     This function contains

@@ -1,8 +1,6 @@
 import pytest
-from functools import partial
-from unittest.mock import patch
 from utde.checks import check
-from utde.errors import LintCheckError, TypeCheckError
+from utde.errors import TypeCheckError
 
 
 # TEST TYPE CHECKING
@@ -110,44 +108,3 @@ def test_type_check_fails_on_correct_wrong_type():
 
     with pytest.raises(TypeCheckError):
         foo(42)
-
-
-def test_check_fails_on_linting_error():
-    with pytest.raises(LintCheckError):
-        # had to put this code into a seperate file
-        # so the project linter doesn't complain
-        # about the linting error ^^
-        import data.fn_with_linting_error
-
-        _ = data.fn_with_linting_error
-
-
-@patch("utde.check", new_callable=partial(check, enable_lint_checks=False))
-def test_check_succeeds_on_disabled_linting(_check_without_linting_mock):
-    # had to put this code into a seperate file
-    # so the project linter doesn't complain
-    # about the linting error ^^
-    import data.fn_with_linting_error
-
-    _ = data.fn_with_linting_error
-
-
-def test_check_succeeds_if_linter_fails_elsewhere():
-    # had to put this code into a seperate file
-    # so the project linter doesn't complain
-    # about the linting error ^^
-    import data.other_fn_with_linting_error
-
-    _ = data.fn_with_linting_error
-
-
-def test_check_succeeds_on_surpressed_linting():
-    @check
-    def foo():
-        unused_var = 42  # noqa
-
-
-def test_check_linting_disabled_if_inside_python_repl():
-    code = ["from utde import check", "@check", "def foo():", "\tunused_var=42"]
-    code = "\n".join(code)
-    exec(code)
